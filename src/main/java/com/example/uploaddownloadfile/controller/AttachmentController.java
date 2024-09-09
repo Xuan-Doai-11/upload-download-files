@@ -79,7 +79,6 @@ public class AttachmentController extends ApiController{
                         "attachment; filename=\"" + URLEncoder.encode(attachment.getFileName(), StandardCharsets.UTF_8).replace("+", "%20") + "\""
                 )
                 .body(new ByteArrayResource(attachment.getData()));
-
     }
 
 
