@@ -34,6 +34,8 @@ public class AttachmentController extends ApiController{
 
     private static final String MEDIA_TYPE_STREAM = "application/octet-stream";
 
+    private static final String CONTENT_DISPOSITION = "attachment;filename=";
+
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("files") List<MultipartFile> files) throws Exception {
        ResponseEntity<String> response;
@@ -75,8 +77,8 @@ public class AttachmentController extends ApiController{
         attachment = attachmentService.getAttachmentById(fileId);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(attachment.getFileType()))
-                .header(CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + URLEncoder.encode(attachment.getFileName(), StandardCharsets.UTF_8).replace("+", "%20") + "\""
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        CONTENT_DISPOSITION + URLEncoder.encode(attachment.getFileName(), StandardCharsets.UTF_8).replace("+", "%20")
                 )
                 .body(new ByteArrayResource(attachment.getData()));
 
@@ -98,7 +100,8 @@ public class AttachmentController extends ApiController{
 
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachment.getFileSize() + ".zip\"")
+                //.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachment.getFileSize() + ".zip\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, CONTENT_DISPOSITION + attachment.getFileSize() + ".zip\"")
                 .contentType(MediaType.parseMediaType(MEDIA_TYPE_STREAM))
                 .body(res);
 
